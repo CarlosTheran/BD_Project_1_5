@@ -1,6 +1,7 @@
 package Part5;
 
 import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
@@ -8,18 +9,26 @@ import java.io.IOException;
 /**
  * Created by carlos on 03-25-17.
  */
-public class TwitterRepliesReducer extends Reducer<Text, IntWritable, Text, IntWritable>  {
+public class TwitterRepliesReducer extends Reducer<Text, Text, Text, Text>  {
 
     @Override
-    protected void reduce(Text key, Iterable<IntWritable> values, Context context)
+    protected void reduce(Text key, Iterable<Text> values, Context context)
             throws IOException, InterruptedException {
 
-        int count = 0;
+        String result = "[ ";
+        int cont=0;
 
-        for (IntWritable value : values){
-            count += value.get();
+        for (Text value : values){
+            result = result + value;
+            result = result + " , ";
+            cont =cont + 1;
         }
-        context.write(key, new IntWritable(count));
+
+        Integer.toString(cont);
+        result = result + cont;
+        result = result + " ]";
+        //concatenar
+        context.write(key, new Text(result));
 
     }
 
